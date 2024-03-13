@@ -25,6 +25,7 @@ public class Tutor {
      */
     private Tutor() {
         towerOfHanoi(9, 1, 3, 2);
+
         VoiceManager voiceManager = VoiceManager.getInstance();
         System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
         voice = voiceManager.getVoice("kevin16");
@@ -56,11 +57,19 @@ public class Tutor {
      */
     public void toggleEnabled() {
         isEnabled = !isEnabled;
+
+
+        if(isEnabled){
+            speak("I'm here to help.");
+            return;
+        }
+
+        speak("Goodbye.");
     }
 
     /**
      * Checks if the given move is the best move according to the tutor.
-     *
+     * Pops the move from stack if valid. Assumes move will be processed if valid.
      * @param move the move to check
      * @return true if the move is the best move, false otherwise
      */
@@ -71,6 +80,7 @@ public class Tutor {
         if (move != bestMoves.peek()) {
             return false;
         }
+
         bestMoves.pop();
 
 
@@ -89,10 +99,7 @@ public class Tutor {
      * @param to   the destination rod
      */
     public void addBestMove(int n, int from, int to) {
-        Move move = new Move()
-                .setN(n)
-                .setFrom(from)
-                .setTo(to);
+        Move move = new Move().setN(n).setFrom(from).setTo(to);
         bestMoves.push(move);
     }
 
