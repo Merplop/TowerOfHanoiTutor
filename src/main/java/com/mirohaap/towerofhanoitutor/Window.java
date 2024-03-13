@@ -16,6 +16,7 @@ public class Window extends Application {
         stage.setTitle("Hanoi Tower");
         stage.setScene(scene);
         Tutor tutor = Tutor.getTutor();
+        tutor.speak("Welcome to Hanoi Tutor!");
         stage.show();
         stage.setResizable(false);
     }

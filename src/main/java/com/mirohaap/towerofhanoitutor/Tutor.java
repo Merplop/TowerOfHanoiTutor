@@ -1,6 +1,10 @@
 package com.mirohaap.towerofhanoitutor;
 
+import java.util.Arrays;
 import java.util.Stack;
+
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 
 /**
  * The Tutor class represents a tutor for the Tower of Hanoi game.
@@ -11,8 +15,9 @@ public class Tutor {
     private static Tutor instance;
     private Stack<Move> bestMoves = new Stack<Move>();
 
-
     private boolean isEnabled = false;
+
+    private Voice voice;
 
     /**
      * Private constructor for the Tutor class.
@@ -20,7 +25,13 @@ public class Tutor {
      */
     private Tutor() {
         towerOfHanoi(9, 1, 3, 2);
-        System.out.println(bestMoves);
+        VoiceManager voiceManager = VoiceManager.getInstance();
+        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+        voice = voiceManager.getVoice("kevin16");
+        voice.allocate();
+        voice.setRate(110);
+        voice.setPitch(100);
+        voice.setVolume(0.8f);
     }
 
     /**
@@ -42,7 +53,6 @@ public class Tutor {
 
     /**
      * Toggles the enabled state of the tutor.
-     *
      */
     public void toggleEnabled() {
         isEnabled = !isEnabled;
@@ -62,7 +72,13 @@ public class Tutor {
             return false;
         }
         bestMoves.pop();
+
+
         return true;
+    }
+
+    public void speak(String message) {
+        new Thread(() -> voice.speak(message)).start();
     }
 
     /**
