@@ -97,4 +97,8 @@ public class Tutor {
         addBestMove(n, from_rod, to_rod);
         towerOfHanoi(n - 1, aux_rod, to_rod, from_rod);
     }
+
+    public Stack<Move> getBestMoves(){
+        return bestMoves;
+    }
 }
