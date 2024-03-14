@@ -1,6 +1,10 @@
 package com.mirohaap.towerofhanoitutor;
 
+import java.util.Arrays;
 import java.util.Stack;
+
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 
 /**
  * The Tutor class represents a tutor for the Tower of Hanoi game.
@@ -11,8 +15,9 @@ public class Tutor {
     private static Tutor instance;
     private Stack<Move> bestMoves = new Stack<Move>();
 
-
     private boolean isEnabled = false;
+
+    private Voice voice;
 
     /**
      * Private constructor for the Tutor class.
@@ -20,7 +25,14 @@ public class Tutor {
      */
     private Tutor() {
         towerOfHanoi(9, 1, 3, 2);
-        System.out.println(bestMoves);
+
+        VoiceManager voiceManager = VoiceManager.getInstance();
+        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+        voice = voiceManager.getVoice("kevin16");
+        voice.allocate();
+        voice.setRate(110);
+        voice.setPitch(100);
+        voice.setVolume(0.8f);
     }
 
     /**
@@ -42,15 +54,22 @@ public class Tutor {
 
     /**
      * Toggles the enabled state of the tutor.
-     *
      */
     public void toggleEnabled() {
         isEnabled = !isEnabled;
+
+
+        if(isEnabled){
+            speak("I'm here to help.");
+            return;
+        }
+
+        speak("Goodbye.");
     }
 
     /**
      * Checks if the given move is the best move according to the tutor.
-     *
+     * Pops the move from stack if valid. Assumes move will be processed if valid.
      * @param move the move to check
      * @return true if the move is the best move, false otherwise
      */
@@ -61,8 +80,15 @@ public class Tutor {
         if (move != bestMoves.peek()) {
             return false;
         }
+
         bestMoves.pop();
+
+
         return true;
+    }
+
+    public void speak(String message) {
+        new Thread(() -> voice.speak(message)).start();
     }
 
     /**
@@ -73,10 +99,7 @@ public class Tutor {
      * @param to   the destination rod
      */
     public void addBestMove(int n, int from, int to) {
-        Move move = new Move()
-                .setN(n)
-                .setFrom(from)
-                .setTo(to);
+        Move move = new Move().setN(n).setFrom(from).setTo(to);
         bestMoves.push(move);
     }
 

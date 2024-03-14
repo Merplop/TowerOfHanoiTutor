@@ -15,6 +15,8 @@ public class Window extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 790, 620);
         stage.setTitle("Hanoi Tower");
         stage.setScene(scene);
+        Tutor tutor = Tutor.getTutor();
+        tutor.speak("Welcome to Hanoi Tutor!");
         stage.show();
         stage.setResizable(false);
     }
